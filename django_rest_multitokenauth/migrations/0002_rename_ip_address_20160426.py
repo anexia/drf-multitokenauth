@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('coreauth', '0001_initial'),
+        ('django_rest_multitokenauth', '0001_initial'),
     ]
 
     operations = [
