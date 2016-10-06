@@ -13,7 +13,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     include_package_data=True,
-    license='MIT License',
+    license='BSD License',
     description='An extension of django rest frameworks token auth',
     long_description=README,
     url='https://chkr.at/',
