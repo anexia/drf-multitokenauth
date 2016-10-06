@@ -1,6 +1,6 @@
 """ contains basic admin views for MultiToken """
 from django.contrib import admin
-from eric.coreauth.models import MultiToken
+from django_rest_multitokenauth.models import MultiToken
 
 
 @admin.register(MultiToken)

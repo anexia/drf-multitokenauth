@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 
 from rest_framework.authentication import TokenAuthentication
 
-from eric.coreauth.models import MultiToken
+from django_rest_multitokenauth.models import MultiToken
 
 
 class MultiTokenAuthentication(TokenAuthentication):

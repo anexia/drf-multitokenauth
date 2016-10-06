@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from eric.coreauth.models import MultiToken
+from django_rest_multitokenauth.models import MultiToken
 
 # read http://www.django-rest-framework.org/api-guide/testing/ for more info about testing with django rest framework
 

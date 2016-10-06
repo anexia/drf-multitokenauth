@@ -50,7 +50,7 @@ class MultiToken(models.Model):
         #
         # Also see corresponding ticket:
         # https://github.com/tomchristie/django-rest-framework/issues/705
-        abstract = 'eric.coreauth' not in settings.INSTALLED_APPS
+        abstract = 'django_rest_multitokenauth' not in settings.INSTALLED_APPS
         verbose_name = _("Token")
         verbose_name_plural = _("Tokens")
 

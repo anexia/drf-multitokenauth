@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import get_authorization_header
 
-from eric.coreauth.models import MultiToken
+from django_rest_multitokenauth.models import MultiToken
 
 
 class LogoutAndDeleteAuthToken(APIView):
