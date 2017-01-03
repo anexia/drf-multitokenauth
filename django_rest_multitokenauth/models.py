@@ -65,5 +65,5 @@ class MultiToken(models.Model):
         return binascii.hexlify(os.urandom(32)).decode()
 
     def __str__(self):
-        return self.key + " (user " + str(self.user) + " with IP " + self.last_known_IP + \
+        return self.key + " (user " + str(self.user) + " with IP " + self.last_known_ip + \
                " and user agent " + self.user_agent + ")"
