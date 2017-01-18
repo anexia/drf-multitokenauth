@@ -1,11 +1,18 @@
+from django.contrib.auth.models import User
+from django.http import Http404
+from django.utils.translation import ugettext_lazy as _
+
 from rest_framework import parsers, renderers
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import get_authorization_header
+from django.core.exceptions import ValidationError
 
 from django_rest_multitokenauth.models import MultiToken
-
+from django_rest_multitokenauth.serializers import EmailSerializer
+from django_rest_multitokenauth.models import ResetPasswordToken
+from django_rest_multitokenauth.signals import reset_password_token_created
 
 class LogoutAndDeleteAuthToken(APIView):
     """ Custom API View for logging out"""
@@ -50,5 +57,53 @@ class LoginAndObtainAuthToken(APIView):
         return Response({'error': 'not logged in'})
 
 
+class ResetPasswordConfirm(APIView):
+    pass
+
+
+class ResetPasswordRequestToken(APIView):
+    """
+    An Api View which provides a method to request a password reset token based on an e-mail address
+
+    Sends a signal reset_password_token_created when a reset token was created
+    """
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = EmailSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+
+        # find a user by email address
+        users = User.objects.filter(email=email)
+
+        active_user_found = False
+
+        for user in users:
+            if user.is_active:
+                active_user_found = True
+
+        if not active_user_found:
+            raise ValidationError({
+                'email': ValidationError(_("There is no active user associated with this e-mail address"), code='invalid')})
+
+        for user in users:
+            if user.is_active:
+                token = ResetPasswordToken.objects.create(
+                    user=user,
+                    user_agent=request.META['HTTP_USER_AGENT'],
+                    ip_address=request.META['REMOTE_ADDR']
+                )
+                # send a signal that the password token was created, let whoever receives this signal handle sending the email
+                reset_password_token_created.send(sender=self.__class__, reset_password_token=token)
+        return Response({'status': 'OK'})
+
+
 login_and_obtain_auth_token = LoginAndObtainAuthToken.as_view()
 logout_and_delete_auth_token = LogoutAndDeleteAuthToken.as_view()
+reset_password_confirm = ResetPasswordConfirm.as_view()
+reset_password_request_token = ResetPasswordRequestToken.as_view()
