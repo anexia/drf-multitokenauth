@@ -10,7 +10,7 @@ from rest_framework.authentication import get_authorization_header
 from django.core.exceptions import ValidationError
 
 from django_rest_multitokenauth.models import MultiToken
-from django_rest_multitokenauth.serializers import EmailSerializer
+from django_rest_multitokenauth.serializers import EmailSerializer, PasswordTokenSerializer
 from django_rest_multitokenauth.models import ResetPasswordToken
 from django_rest_multitokenauth.signals import reset_password_token_created
 
@@ -58,7 +58,29 @@ class LoginAndObtainAuthToken(APIView):
 
 
 class ResetPasswordConfirm(APIView):
-    pass
+    """
+    An Api View which provides a method to reset a password based on a unique token
+    """
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = PasswordTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        password = serializer.validated_data['password']
+        token = serializer.validated_data['token']
+
+        # find token
+        reset_password_token = ResetPasswordToken.objects.get(key=token)
+
+        reset_password_token.user.set_password(password)
+
+        reset_password_token.user.save()
+
+        return Response({'status': 'OK'})
 
 
 class ResetPasswordRequestToken(APIView):
