@@ -76,9 +76,13 @@ class ResetPasswordConfirm(APIView):
         # find token
         reset_password_token = ResetPasswordToken.objects.get(key=token)
 
-        reset_password_token.user.set_password(password)
+        # change users password
+        if reset_password_token.user.has_usable_password():
+            reset_password_token.user.set_password(password)
+            reset_password_token.user.save()
 
-        reset_password_token.user.save()
+        # delete token
+        reset_password_token.delete()
 
         return Response({'status': 'OK'})
 
@@ -106,21 +110,25 @@ class ResetPasswordRequestToken(APIView):
         active_user_found = False
 
         for user in users:
-            if user.is_active:
+            if user.is_active and user.has_usable_password():
                 active_user_found = True
 
         if not active_user_found:
             raise ValidationError({
-                'email': ValidationError(_("There is no active user associated with this e-mail address"), code='invalid')})
+                'email': ValidationError(
+                    _("There is no active user associated with this e-mail address or the password can not be changed"),
+                    code='invalid')}
+            )
 
         for user in users:
-            if user.is_active:
+            if user.is_active and user.has_usable_password():
                 token = ResetPasswordToken.objects.create(
                     user=user,
                     user_agent=request.META['HTTP_USER_AGENT'],
                     ip_address=request.META['REMOTE_ADDR']
                 )
-                # send a signal that the password token was created, let whoever receives this signal handle sending the email
+                # send a signal that the password token was created
+                # let whoever receives this signal handle sending the email for the password reset
                 reset_password_token_created.send(sender=self.__class__, reset_password_token=token)
         return Response({'status': 'OK'})
 
