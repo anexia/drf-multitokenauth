@@ -60,6 +60,8 @@ class LoginAndObtainAuthToken(APIView):
         user = serializer.validated_data['user']
 
         if user.is_authenticated():
+            user.last_login = timezone.now()
+            user.save()
             token = MultiToken.objects.create(
                 user=user,
                 user_agent=request.META['HTTP_USER_AGENT'],
