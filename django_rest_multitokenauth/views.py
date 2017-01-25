@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.contrib.auth.models import update_last_login
 
 from rest_framework import parsers, renderers, status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -60,8 +61,7 @@ class LoginAndObtainAuthToken(APIView):
         user = serializer.validated_data['user']
 
         if user.is_authenticated():
-            user.last_login = timezone.now()
-            user.save()
+            update_last_login(None, user)
             token = MultiToken.objects.create(
                 user=user,
                 user_agent=request.META['HTTP_USER_AGENT'],
