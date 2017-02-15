@@ -15,7 +15,7 @@ from rest_framework.authentication import get_authorization_header
 from django_rest_multitokenauth.models import MultiToken
 from django_rest_multitokenauth.serializers import EmailSerializer, PasswordTokenSerializer
 from django_rest_multitokenauth.models import ResetPasswordToken
-from django_rest_multitokenauth.signals import reset_password_token_created
+from django_rest_multitokenauth.signals import reset_password_token_created, pre_auth, post_auth
 
 
 def get_password_reset_token_expiry_time():
@@ -58,6 +58,13 @@ class LoginAndObtainAuthToken(APIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        # fire pre_auth signal
+        pre_auth.send(
+            sender=self.__class__,
+            username=serializer.data['username'],
+            password=serializer.data['password']
+        )
+
         user = serializer.validated_data['user']
 
         if user.is_authenticated():
@@ -67,6 +74,10 @@ class LoginAndObtainAuthToken(APIView):
                 user_agent=request.META['HTTP_USER_AGENT'],
                 last_known_ip=request.META['REMOTE_ADDR']
             )
+
+            # fire post_auth signal
+            post_auth.send(sender=self.__class__, user=user)
+
             return Response({'token': token.key})
         # else:
         return Response({'error': 'not logged in'})
