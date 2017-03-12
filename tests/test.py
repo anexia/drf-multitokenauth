@@ -356,18 +356,18 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.assertEqual(ResetPasswordToken.objects.all().count(), 2)
 
         # try to reset password of user2
-        response = self.rest_do_reset_password_with_token(token2, "secret2_new")
+        response = self.rest_do_reset_password_with_token(token2.key, "secret2_new")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now there should only be one token left (token1)
         self.assertEqual(ResetPasswordToken.objects.all().count(), 1)
-        self.assertEqual(ResetPasswordToken.objects.filter(key=token1).count(), 1)
+        self.assertEqual(ResetPasswordToken.objects.filter(key=token1.key).count(), 1)
 
         # user 2 should be able to login with "secret2_new" now
         self.login_and_obtain_token("user2", "secret2_new")
 
         # try to reset again with token2 (should not work)
-        response = self.rest_do_reset_password_with_token(token2, "secret2_fake_new")
+        response = self.rest_do_reset_password_with_token(token2.key, "secret2_fake_new")
         self.assertEquals(response.status_code, status.HTTP_404_NOT_FOUND)
 
         # user 2 should still be able to login with "secret2_new" now
