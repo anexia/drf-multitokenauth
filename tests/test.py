@@ -100,6 +100,9 @@ class HelperMixin:
 
 
 class AuthTestCase(APITestCase, HelperMixin):
+    """
+    Several Test Cases for the Multi Auth Token Django App
+    """
     def setUp(self):
         self.setUpUrls()
         self.user1 = User.objects.create_user("user1", "user1@mail.com", "secret1")
@@ -247,6 +250,7 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.assertEqual(MultiToken.objects.filter(key=token3).first().user.username, "user1")
 
     def test_logout_with_invalid_token(self):
+        """ Tries to log out with an invalid token """
         token = self.login_and_obtain_token("user1", "secret1")
         # there should be one token
         self.assertEqual(MultiToken.objects.all().count(), 1)
@@ -286,8 +290,61 @@ class AuthTestCase(APITestCase, HelperMixin):
         # there should be one token
         self.assertEqual(ResetPasswordToken.objects.all().count(), 1)
 
-    def test_reset_password_multiple_users(self):
-        pass
+        # if the same user tries to reset again, the user will get the same token again
+        response = self.rest_do_request_reset_token(email="user1@mail.com")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(reset_password_token_signal_call_count, 2)
+        self.assertNotEqual(last_reset_password_token, "")
+
+        # there should be one token
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 1)
+        # and it should be assigned to user1
+        self.assertEqual(
+            ResetPasswordToken.objects.filter(key=last_reset_password_token.key).first().user.username,
+            "user1"
+        )
+
+        # try to reset the password
+        response = self.rest_do_reset_password_with_token(last_reset_password_token.key, "new_secret")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # there should be zero tokens
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 0)
+
+        # try to login with the old username/password (should fail)
+        response = self.rest_do_login("user1", "secret1")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # try to login with the new username/Password (should work)
+        response = self.rest_do_login("user1", "new_secret")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_reset_password_multiple_users(self):
-        pass
+        """ Checks whether multiple password reset tokens can be created for different users """
+        # create a token for user 1
+        response = self.rest_do_request_reset_token(email="user1@mail.com")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 1)
+
+        # create another token for user 2
+        response = self.rest_do_request_reset_token(email="user2@mail.com")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        tokens = ResetPasswordToken.objects.all()
+        self.assertEqual(tokens.count(), 2)
+
+        # validate that those two tokens are different
+        self.assertNotEqual(tokens[0].key, tokens[1].key)
+
+        # try to request another token, there should still always be two keys
+        response = self.rest_do_request_reset_token(email="user1@mail.com")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 2)
+
+        # create another token for user 2
+        response = self.rest_do_request_reset_token(email="user2@mail.com")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 2)
+
+
+
+
