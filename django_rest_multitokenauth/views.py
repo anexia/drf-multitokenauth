@@ -71,8 +71,8 @@ class LoginAndObtainAuthToken(APIView):
             update_last_login(None, user)
             token = MultiToken.objects.create(
                 user=user,
-                user_agent=request.META['HTTP_USER_AGENT'],
-                last_known_ip=request.META['REMOTE_ADDR']
+                user_agent=request.META.get('HTTP_USER_AGENT', ''),
+                last_known_ip=request.META.get('REMOTE_ADDR', '')
             )
 
             # fire post_auth signal
