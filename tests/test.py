@@ -45,7 +45,8 @@ class HelperMixin:
         )
 
     def rest_do_logout(self, token, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
-        self.set_client_credentials(token)
+        if token:
+            self.set_client_credentials(token)
 
         # call logout
         return self.client.post(
@@ -72,7 +73,7 @@ class AuthTestCase(APITestCase, HelperMixin):
         return token
 
     def test_login_and_logout(self):
-        """ tests login and logout """
+        """ tests login and logout for a single user """
         # there should be zero tokens
         self.assertEqual(MultiToken.objects.all().count(), 0)
 
@@ -94,6 +95,7 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.assertEqual(MultiToken.objects.all().count(), 0)
 
     def test_login_multiple_times(self):
+        """ tests login with the same user for several times """
         # there should be zero tokens
         self.assertEqual(MultiToken.objects.all().count(), 0)
 
@@ -131,7 +133,7 @@ class AuthTestCase(APITestCase, HelperMixin):
 
         # Now logout with token2 and verify that token1 and token3 are still in database
         response = self.rest_do_logout(token2)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         # should be two tokens left
         self.assertEqual(MultiToken.objects.all().count(), 2)
         # verify that these two are token1 and token3
@@ -141,36 +143,85 @@ class AuthTestCase(APITestCase, HelperMixin):
         )
 
     def test_login_with_invalid_credentials(self):
+        """ tests login with invalid credentials """
+        # log in one time, just to be sure that the login works
+        self.login_and_obtain_token("user1", "secret1")
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
+
         # correct username, but wrong password
         response = self.rest_do_login("user1", "wrongpassword")
         content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue('non_field_errors' in content)
 
-        # there should be zero tokens
-        self.assertEqual(MultiToken.objects.all().count(), 0)
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
 
         # wrong username, but correct password
         response = self.rest_do_login("userOne", "secret1")
         content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue('non_field_errors' in content)
 
-        # there should be zero tokens
-        self.assertEqual(MultiToken.objects.all().count(), 0)
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
 
         # wrong username, wrong password
         response = self.rest_do_login("userOne", "wrongpassword")
         content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue('non_field_errors' in content)
+        self.assertFalse('token' in content, msg="There should not be a token in the response")
 
-        # there should be zero tokens
-        self.assertEqual(MultiToken.objects.all().count(), 0)
-
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
 
     def test_login_multiple_users(self):
-        pass
+        """ Login with multiple accounts and obtain several tokens """
+        token1 = self.login_and_obtain_token("user1", "secret1")
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
+        # check that token1 is assigned to user1
+        self.assertEqual(MultiToken.objects.filter(key=token1).first().user.username, "user1")
+
+        token2 = self.login_and_obtain_token("user2", "secret2")
+        # there should be two tokens
+        self.assertEqual(MultiToken.objects.all().count(), 2)
+        # check that token1 is assigned to user1
+        self.assertEqual(MultiToken.objects.filter(key=token1).first().user.username, "user1")
+        # check that token2 is assigned to user2
+        self.assertEqual(MultiToken.objects.filter(key=token2).first().user.username, "user2")
+
+        # login again with user1
+        token3 = self.login_and_obtain_token("user1", "secret1")
+        # there should be three tokens
+        self.assertEqual(MultiToken.objects.all().count(), 3)
+        # check that token1 is assigned to user1
+        self.assertEqual(MultiToken.objects.filter(key=token1).first().user.username, "user1")
+        # check that token2 is assigned to user2
+        self.assertEqual(MultiToken.objects.filter(key=token2).first().user.username, "user2")
+        # check that token3 is assigned to user1
+        self.assertEqual(MultiToken.objects.filter(key=token3).first().user.username, "user1")
+
+    def test_logout_with_invalid_token(self):
+        token = self.login_and_obtain_token("user1", "secret1")
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
+
+        # logout with an invalid token
+        response = self.rest_do_logout(token + "a")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
+
+    def test_logout_without_token(self):
+        self.reset_client_credentials()
+        response = self.rest_do_logout(None)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
     def test_reset_password(self):
         pass

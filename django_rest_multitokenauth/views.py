@@ -42,9 +42,9 @@ class LogoutAndDeleteAuthToken(APIView):
                 tokens.delete()
                 return Response({'status': 'logged out'})
             else:
-                return Response({'error': 'invalid token'})
+                return Response({'error': 'invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({'error': 'not logged in'})
+        return Response({'error': 'not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LoginAndObtainAuthToken(APIView):
@@ -80,7 +80,7 @@ class LoginAndObtainAuthToken(APIView):
 
             return Response({'token': token.key})
         # else:
-        return Response({'error': 'not logged in'})
+        return Response({'error': 'not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ResetPasswordConfirm(APIView):

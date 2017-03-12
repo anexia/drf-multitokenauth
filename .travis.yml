@@ -29,17 +29,26 @@ matrix:
   exclude:
     - python: "3.3"
       # Django 1.9 does not support python 3.3, but 3.4+
-      env: DJANGO_VERSION=1.9 DJANGO_REST_VERSION=3.4
-      env: DJANGO_VERSION=1.9 DJANGO_REST_VERSION=3.5
-      env: DJANGO_VERSION=1.9 DJANGO_REST_VERSION=3.6
-      env: DJANGO_VERSION=1.10 DJANGO_REST_VERSION=3.4
-      env: DJANGO_VERSION=1.10 DJANGO_REST_VERSION=3.5
-      env: DJANGO_VERSION=1.10 DJANGO_REST_VERSION=3.6
-      env: DJANGO_VERSION=1.11a1 DJANGO_REST_VERSION=3.4
-      env: DJANGO_VERSION=1.11a1 DJANGO_REST_VERSION=3.5
-      env: DJANGO_VERSION=1.11a1 DJANGO_REST_VERSION=3.6
+       - env: DJANGO_VERSION=1.9
+         env: DJANGO_REST_VERSION=3.4
+       - env: DJANGO_VERSION=1.9
+         env: DJANGO_REST_VERSION=3.5
+       - env: DJANGO_VERSION=1.9
+         env: DJANGO_REST_VERSION=3.6
+       - env: DJANGO_VERSION=1.10
+         env: DJANGO_REST_VERSION=3.4
+       - env: DJANGO_VERSION=1.10
+         env: DJANGO_REST_VERSION=3.5
+       - env: DJANGO_VERSION=1.10
+         env: DJANGO_REST_VERSION=3.6
+       - env: DJANGO_VERSION=1.11a1
+         env: DJANGO_REST_VERSION=3.4
+       - env: DJANGO_VERSION=1.11a1
+         env: DJANGO_REST_VERSION=3.5
+       - env: DJANGO_VERSION=1.11a1
+         env: DJANGO_REST_VERSION=3.6
     - python: "nightly"
-      env: DJANGO_VERSION=1.8 # Django 1.8 might not work with future versions of python
+       - env: DJANGO_VERSION=1.8 # Django 1.8 might not work with future versions of python
 script:
   - python setup.py install
   - cd tests/
