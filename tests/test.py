@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django_rest_multitokenauth.models import MultiToken
-
+from django_rest_multitokenauth.models import MultiToken, ResetPasswordToken
+from unittest import mock
 
 # try getting reverse from django.urls
 try:
@@ -15,23 +15,36 @@ except:
     from django.core.urlresolvers import reverse
 
 
+reset_password_token_signal_call_count = 0
+last_reset_password_token = ""
+
+def count_reset_password_token_signal(reset_password_token, *args, **kwargs):
+    global reset_password_token_signal_call_count, last_reset_password_token
+    reset_password_token_signal_call_count += 1
+    last_reset_password_token = reset_password_token
+
+
 class HelperMixin:
     """
     Mixin which encapsulates methods for login, logout, request reset password and reset password confirm
     """
     def setUpUrls(self):
+        """ set up urls by using djangos reverse function """
         self.login_url = reverse('multi_token_auth:auth-login')
         self.logout_url = reverse('multi_token_auth:auth-logout')
         self.reset_password_request_url = reverse('multi_token_auth:auth-reset-password-request')
-        self.reset_passwordconfirm_url = reverse('multi_token_auth:auth-reset-password-confirm')
+        self.reset_password_confirm_url = reverse('multi_token_auth:auth-reset-password-confirm')
 
     def set_client_credentials(self, token):
+        """ set client credentials, namely the auth token """
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
     def reset_client_credentials(self):
+        """ reset all client credentials """
         self.client.credentials()
 
     def rest_do_login(self, username, password, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
+        """ REST API Wrapper for login """
         data = {
             'username': username,
             'password': password
@@ -45,12 +58,42 @@ class HelperMixin:
         )
 
     def rest_do_logout(self, token, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
+        """ REST API wrapper for logout """
         if token:
             self.set_client_credentials(token)
 
         # call logout
         return self.client.post(
             self.logout_url,
+            format='json',
+            HTTP_USER_AGENT=HTTP_USER_AGENT,
+            REMOTE_ADDR=REMOTE_ADDR
+        )
+
+    def rest_do_request_reset_token(self, email, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
+        """ REST API wrapper for requesting a password reset token """
+        data = {
+            'email': email
+        }
+
+        return self.client.post(
+            self.reset_password_request_url,
+            data,
+            format='json',
+            HTTP_USER_AGENT=HTTP_USER_AGENT,
+            REMOTE_ADDR=REMOTE_ADDR
+        )
+
+    def rest_do_reset_password_with_token(self, token, new_password, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
+        """ REST API wrapper for requesting a password reset token """
+        data = {
+            'token': token,
+            'password': new_password
+        }
+
+        return self.client.post(
+            self.reset_password_confirm_url,
+            data,
             format='json',
             HTTP_USER_AGENT=HTTP_USER_AGENT,
             REMOTE_ADDR=REMOTE_ADDR
@@ -218,13 +261,31 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.assertEqual(MultiToken.objects.all().count(), 1)
 
     def test_logout_without_token(self):
+        """ Try to logout without a token """
         self.reset_client_credentials()
         response = self.rest_do_logout(None)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-
     def test_reset_password(self):
-        pass
+        """ Tests resetting a password """
+
+        # there should be zero tokens
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 0)
+
+        # we need to check whether the signal is getting called
+        global reset_password_token_signal_call_count
+        reset_password_token_signal_call_count = 0
+
+        from django_rest_multitokenauth.signals import reset_password_token_created
+        reset_password_token_created.connect(count_reset_password_token_signal)
+
+        response = self.rest_do_request_reset_token(email="user1@mail.com")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(reset_password_token_signal_call_count, 1)
+        self.assertNotEqual(last_reset_password_token, "")
+
+        # there should be one token
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 1)
 
     def test_reset_password_multiple_users(self):
         pass
