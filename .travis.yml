@@ -6,17 +6,19 @@ python: # test various python versions, Django supports all of them
   - "3.5"
   - "3.6"
   - "nightly" # currently points to 3.6-dev
-django:
+env:
   matrix:
-    - DJANGO_VERSION=1.8
-    - DJANGO_VERSION=1.9
-    - DJANGO_VERSION=1.10
-    - DJANGO_VERSION=1.11a1
-restframework:
-  matrix:
-    - DJANGO_REST_VERSION=3.6
-    - DJANGO_REST_VERSION=3.5
-    - DJANGO_REST_VERSION=3.4
+    - DJANGO_VERSION=1.8 DJANGO_REST_VERSION=3.4
+    - DJANGO_VERSION=1.8 DJANGO_REST_VERSION=3.5
+    - DJANGO_VERSION=1.9 DJANGO_REST_VERSION=3.4
+    - DJANGO_VERSION=1.9 DJANGO_REST_VERSION=3.5
+    - DJANGO_VERSION=1.9 DJANGO_REST_VERSION=3.6
+    - DJANGO_VERSION=1.10 DJANGO_REST_VERSION=3.4
+    - DJANGO_VERSION=1.10 DJANGO_REST_VERSION=3.5
+    - DJANGO_VERSION=1.10 DJANGO_REST_VERSION=3.6
+    - DJANGO_VERSION=1.11a1 DJANGO_REST_VERSION=3.4
+    - DJANGO_VERSION=1.11a1 DJANGO_REST_VERSION=3.5
+    - DJANGO_VERSION=1.11a1 DJANGO_REST_VERSION=3.6
 cache:
   directories:
     - $HOME/.cache/pip
@@ -26,13 +28,13 @@ install:
 matrix:
   exclude:
     - python: "3.3"
-      django: DJANGO_VERSION=1.9 # Django 1.9 does not support python 3.3, but 3.4+
+      env: DJANGO_VERSION=1.9 # Django 1.9 does not support python 3.3, but 3.4+
     - python: "3.3"
-      django: DJANGO_VERSION=1.10 # Django 1.10 does not support python 3.3, but 3.4+
+      env: DJANGO_VERSION=1.10 # Django 1.10 does not support python 3.3, but 3.4+
     - python: "3.3"
-      django: DJANGO_VERSION=1.11a1
+      env: DJANGO_VERSION=1.11a1
     - python: "nightly"
-      django: DJANGO_VERSION=1.8 # Django 1.8 might not work with future versions of python
+      env: DJANGO_VERSION=1.8 # Django 1.8 might not work with future versions of python
 script:
   - python setup.py install
   - cd tests/

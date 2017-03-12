@@ -43,7 +43,6 @@ class LoginLogoutHelperMixin:
         )
 
 
-
 class LoginLogoutTestCase(APITestCase, LoginLogoutHelperMixin):
     def setUp(self):
         self.user1 = User.objects.create_user("user1", "user1@mail.com", "secret1")
@@ -60,16 +59,24 @@ class LoginLogoutTestCase(APITestCase, LoginLogoutHelperMixin):
 
         return token
 
-
-    def test_login(self):
+    def test_login_and_logout(self):
+        """ tests login and logout """
         # there should be zero tokens
         self.assertEqual(MultiToken.objects.all().count(), 0)
 
         token = self.login_and_obtain_token('user1', 'secret1')
         self.assertEqual(MultiToken.objects.all().count(), 1)
+        # verify the token is for user 1
+        self.assertEqual(
+            MultiToken.objects.filter(key=token).first().user.username,
+            'user1'
+        )
 
         # logout
         response = self.rest_do_logout(token)
         # make sure the response is "logged_out"
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, "{\"status\":\"logged out\"}")
+
+        # there should now again be zero tokens in the database
+        self.assertEqual(MultiToken.objects.all().count(), 0)
