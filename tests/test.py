@@ -4,7 +4,6 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django_rest_multitokenauth.models import MultiToken, ResetPasswordToken
-from unittest import mock
 
 # try getting reverse from django.urls
 try:
