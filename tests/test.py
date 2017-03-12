@@ -321,16 +321,26 @@ class AuthTestCase(APITestCase, HelperMixin):
 
     def test_reset_password_multiple_users(self):
         """ Checks whether multiple password reset tokens can be created for different users """
+        # connect signal
+        # we need to check whether the signal is getting called
+        global reset_password_token_signal_call_count, last_reset_password_token
+        reset_password_token_signal_call_count = 0
+
+        from django_rest_multitokenauth.signals import reset_password_token_created
+        reset_password_token_created.connect(count_reset_password_token_signal)
+
         # create a token for user 1
         response = self.rest_do_request_reset_token(email="user1@mail.com")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(ResetPasswordToken.objects.all().count(), 1)
+        token1 = last_reset_password_token
 
         # create another token for user 2
         response = self.rest_do_request_reset_token(email="user2@mail.com")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         tokens = ResetPasswordToken.objects.all()
         self.assertEqual(tokens.count(), 2)
+        token2 = last_reset_password_token
 
         # validate that those two tokens are different
         self.assertNotEqual(tokens[0].key, tokens[1].key)
@@ -345,6 +355,23 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(ResetPasswordToken.objects.all().count(), 2)
 
+        # try to reset password of user2
+        response = self.rest_do_reset_password_with_token(token2, "secret2_new")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # now there should only be one token left (token1)
+        self.assertEqual(ResetPasswordToken.objects.all().count(), 1)
+        self.assertEqual(ResetPasswordToken.objects.filter(key=token1).count(), 1)
+
+        # user 2 should be able to login with "secret2_new" now
+        self.login_and_obtain_token("user2", "secret2_new")
+
+        # try to reset again with token2 (should not work)
+        response = self.rest_do_reset_password_with_token(token2, "secret2_fake_new")
+        self.assertEquals(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # user 2 should still be able to login with "secret2_new" now
+        self.login_and_obtain_token("user2", "secret2_new")
 
 
 
