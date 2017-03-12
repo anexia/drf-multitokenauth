@@ -1,5 +1,10 @@
 # Django Rest Multi Token Auth
-Work in progress, use at your own risk
+This django app is an extension for the Django Rest Framework (Version 3.4+).
+It tries to overcome the limitation of Token Authentication, which only uses a single
+token per user. 
+
+In addition, this app provides a password reset strategy, where users can request password 
+reset tokens via their registered e-mail address.
 
 ## How to use
 
@@ -60,7 +65,8 @@ The following endpoints are provided:
 
 ## Tests
 
-See folder [tests/](tests/) (work in progress)
+See folder [tests/](tests/). Basically, all endpoints are covered with multiple
+unit tests.
 
 Use this code snippet to run tests:
 ```bash
