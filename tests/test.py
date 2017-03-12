@@ -6,6 +6,16 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django_rest_multitokenauth.models import MultiToken
 
+
+# try getting reverse from django.urls
+try:
+    # Django 1.10 +
+    from django.urls import reverse
+except:
+    # Django 1.8 and 1.9
+    from django.core.urlresolvers import reverse
+
+
 class GenericTestCase(TestCase):
     def test_generic(self):
         self.assertEquals(True, True)
