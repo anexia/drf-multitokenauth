@@ -2,8 +2,11 @@
 __pycache__
 *.pyo
 dist/**
-*.egg-info/**
+*.egg-info*
 .idea/
 venv/
 build/
 .tox/
+db.sqlite3
+dist/
+

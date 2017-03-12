@@ -33,6 +33,9 @@ REST_FRAMEWORK = {
 
 Django url settings:
 ```python
+from django.conf.urls import url, include
+
+
 urlpatterns = [
     ...
     url(r'^api/auth/', include('django_rest_multitokenauth.urls', namespace='multi_token_auth')),
@@ -53,3 +56,16 @@ The following endpoints are provided:
 * ``reset_password_token_created(reset_password_token)`` Fired when a reset password token is generated
 * ``pre_auth(username, password)`` - Fired when an authentication (login) is starting
 * ``post_auth(user)`` - Fired on successful auth
+
+
+## Tests
+
+See folder [tests/](tests/) (work in progress)
+
+Use this code snippet to run tests:
+```bash
+pip install -r requirements_test.txt
+python setup.py install
+cd tests
+python manage.py test
+```
