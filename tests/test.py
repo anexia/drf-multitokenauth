@@ -4,7 +4,11 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django_rest_multitokenauth.models import MultiToken
-from unittest.mock import patch
+try:
+    from unittest.mock import patch
+except:
+    # Python 2.7 fallback
+    from mock import patch
 
 # try getting reverse from django.urls
 try:
