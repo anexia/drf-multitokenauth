@@ -10,11 +10,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-rest-multitokenauth',
-    version='0.3.0',
+    version='1.0.0',
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',
-    description='An extension of django rest frameworks token auth',
+    description='An extension of django rest frameworks token auth, providing multiple tokens per user',
     long_description=README,
     url='https://chkr.at/',
     author='Christian Kreuzberger',
