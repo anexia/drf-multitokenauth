@@ -4,6 +4,7 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django_rest_multitokenauth.models import MultiToken
+from unittest.mock import patch
 
 # try getting reverse from django.urls
 try:
@@ -57,6 +58,7 @@ class HelperMixin:
             HTTP_USER_AGENT=HTTP_USER_AGENT,
             REMOTE_ADDR=REMOTE_ADDR
         )
+
 
 class AuthTestCase(APITestCase, HelperMixin):
     """
@@ -228,4 +230,27 @@ class AuthTestCase(APITestCase, HelperMixin):
         response = self.rest_do_logout(None)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    @patch('django_rest_multitokenauth.signals.pre_auth.send')
+    @patch('django_rest_multitokenauth.signals.post_auth.send')
+    def test_signals(self, mock_pre_auth, mock_post_auth):
+        """ checks whether the signal handlers are called or not"""
+        # verify that signal handlers have not yet been called
+        self.assertFalse(mock_pre_auth.called)
+        self.assertFalse(mock_post_auth.called)
+
+        # try login with invalid credentials
+        self.rest_do_login("user1", "wrong_secret")
+
+        # make sure the signals have not been called
+        self.assertFalse(mock_pre_auth.called)
+        self.assertFalse(mock_post_auth.called)
+
+        # do a login and verify that both signals have been called
+        self.rest_do_login("user1", "secret1")
+
+        self.assertTrue(mock_pre_auth.called)
+        self.assertTrue(mock_post_auth.called)
+
+        self.assertEquals(mock_pre_auth.call_count, 1)
+        self.assertEquals(mock_post_auth.call_count, 1)
 
