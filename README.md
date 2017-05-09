@@ -68,3 +68,13 @@ python setup.py install
 cd tests
 python manage.py test
 ```
+
+## Cache Backend
+If you want to use a cache for the session store, you can install [django-memoize](https://pythonhosted.org/django-memoize/) and add `'memoize'` to `INSTALLED_APPS`.
+
+Then you need to use ``CachedMultiTokenAuthentication`` instead of ``MultiTokenAuthentication``.
+
+```bash
+pip install django-memoize
+```
+

@@ -7,6 +7,14 @@ from rest_framework.authentication import TokenAuthentication
 
 from django_rest_multitokenauth.models import MultiToken
 
+# try to import memoize
+memoize = None
+
+try:
+    from memoize import memoize
+except ImportError:
+    pass
+
 
 class MultiTokenAuthentication(TokenAuthentication):
     """
@@ -23,3 +31,17 @@ class MultiTokenAuthentication(TokenAuthentication):
         if self.model is not None:
             return self.model
         return MultiToken
+
+
+# if memoize is available, create a cached multi token authentication class, which uses redis as a cache
+if memoize:
+    class CachedMultiTokenAuthentication(MultiTokenAuthentication):
+        """
+        Cached MultiTokenAuthentication, using django-memoize
+        """
+        @memoize(timeout=60)
+        def authenticate_credentials(self, key):
+            return super(CachedMultiTokenAuthentication, self).authenticate_credentials(key)
+
+        def __repr__(self):
+            return self.__class__.__name__
