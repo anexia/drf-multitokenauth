@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-rest-multitokenauth',
-    version='1.1.1',
+    version='1.2.0',
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',
@@ -20,12 +20,14 @@ setup(
     author='Christian Kreuzberger',
     author_email='ckreuzberger@anexia-it.com',
     classifiers=[
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.8',
         'Framework :: Django :: 1.9',
         'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',

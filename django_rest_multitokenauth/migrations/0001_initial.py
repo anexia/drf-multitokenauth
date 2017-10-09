@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(verbose_name='Created', auto_now_add=True)),
                 ('last_known_IP', models.GenericIPAddressField(default='127.0.0.1', verbose_name='The IP address of this session')),
                 ('user_agent', models.CharField(default='', max_length=256, verbose_name='HTTP User Agent')),
-                ('user', models.ForeignKey(related_name='auth_tokens', verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(related_name='auth_tokens', verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Tokens',
