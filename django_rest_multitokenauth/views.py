@@ -17,11 +17,20 @@ from django_rest_multitokenauth.serializers import EmailSerializer
 from django_rest_multitokenauth.signals import pre_auth, post_auth
 
 
+def user_is_authenticated_helper(user):
+    if callable(user.is_authenticated):
+        return user.is_authenticated()
+    else:
+        # Starting with Django 2.0 is_authenticated is no longer a function, but a property
+        return user.is_authenticated
+
+
 class LogoutAndDeleteAuthToken(APIView):
     """ Custom API View for logging out"""
 
     def post(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
+        # ToDo: Remove Support For Django 1.8 and 1.9 and use request.user.is_authenticated
+        if user_is_authenticated_helper(request.user):
             # delete this users auth token
             auth_header = get_authorization_header(request)
 
@@ -56,7 +65,8 @@ class LoginAndObtainAuthToken(APIView):
 
         user = serializer.validated_data['user']
 
-        if user.is_authenticated():
+        # ToDo: Remove Support For Django 1.8 and 1.9 and use user.is_authenticated
+        if user_is_authenticated_helper(user):
             update_last_login(None, user)
             token = MultiToken.objects.create(
                 user=user,
