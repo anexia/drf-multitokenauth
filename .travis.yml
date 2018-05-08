@@ -1,34 +1,59 @@
 language: python
-python: # test various python versions, Django supports all of them
+python: # test various python versions (Django Support for various python versions is described within the exclude: section)
   - "2.7"
   - "3.4"
   - "3.5"
   - "3.6"
-  - "nightly" # currently points to 3.6-dev
+  - "3.7-dev"
+  - "pypy"  # PyPy2
+  - "pypy3" # PyPy3
+  - "nightly" # currently points to 3.7-dev
 env:
   matrix:
+    #####################################################
+    # Test against the initial releaes                  #
+    #####################################################
+    - DJANGO_VERSION=1.8 DJANGO_REST_VERSION=3.4
+    - DJANGO_VERSION=1.8 DJANGO_REST_VERSION=3.5
+    - DJANGO_VERSION=1.11 DJANGO_REST_VERSION=3.4
+    - DJANGO_VERSION=1.11 DJANGO_REST_VERSION=3.5
+    - DJANGO_VERSION=1.11 DJANGO_REST_VERSION=3.6
+    - DJANGO_VERSION=2.0 DJANGO_REST_VERSION=3.7
+    - DJANGO_VERSION=2.0 DJANGO_REST_VERSION=3.8
+    #####################################################
+    # Test against the latest minor/patch releases      #
+    #####################################################
     - DJANGO_VERSION=1.8.* DJANGO_REST_VERSION=3.4.*
     - DJANGO_VERSION=1.8.* DJANGO_REST_VERSION=3.5.*
-    - DJANGO_VERSION=1.9.* DJANGO_REST_VERSION=3.4.*
-    - DJANGO_VERSION=1.9.* DJANGO_REST_VERSION=3.5.*
-    - DJANGO_VERSION=1.9.* DJANGO_REST_VERSION=3.6.*
-    - DJANGO_VERSION=1.10.* DJANGO_REST_VERSION=3.4.*
-    - DJANGO_VERSION=1.10.* DJANGO_REST_VERSION=3.5.*
-    - DJANGO_VERSION=1.10.* DJANGO_REST_VERSION=3.6.*
-    - DJANGO_VERSION=1.10.* DJANGO_REST_VERSION=3.7.*
     - DJANGO_VERSION=1.11.* DJANGO_REST_VERSION=3.4.*
     - DJANGO_VERSION=1.11.* DJANGO_REST_VERSION=3.5.*
     - DJANGO_VERSION=1.11.* DJANGO_REST_VERSION=3.6.*
     - DJANGO_VERSION=1.11.* DJANGO_REST_VERSION=3.7.*
-    - DJANGO_VERSION=2.0b1 DJANGO_REST_VERSION=3.7.*
+    - DJANGO_VERSION=1.11.* DJANGO_REST_VERSION=3.8.*
+    - DJANGO_VERSION=2.0.* DJANGO_REST_VERSION=3.7.*
+    - DJANGO_VERSION=2.0.* DJANGO_REST_VERSION=3.8.*
 matrix:
   exclude:
-    - python: "2.7"
-      env: DJANGO_VERSION=2.0b1 DJANGO_REST_VERSION=3.7.*
+    # Django 2.0 does not support Python2.7/PyPy2 anymore
+    - { python: "2.7", env: DJANGO_VERSION=2.0 }
+    - { python: "pypy", env: DJANGO_VERSION=2.0 }
+    - { python: "2.7", env: DJANGO_VERSION=2.0.* }
+    - { python: "pypy", env: DJANGO_VERSION=2.0.* }
+    # Django 1.8 might not support newer versions of python
+    - { python: "3.6", env: DJANGO_VERSION=1.8 }
+    - { python: "3.7", env: DJANGO_VERSION=1.8 }
+    - { python: "pypy3", env: DJANGO_VERSION=1.8 }
+    - { python: "nightly", env: DJANGO_VERSION=1.8 }
+    - { python: "3.6", env: DJANGO_VERSION=1.8.* }
+    - { python: "3.7", env: DJANGO_VERSION=1.8.* }
+    - { python: "pypy3", env: DJANGO_VERSION=1.8.* }
+    - { python: "nightly", env: DJANGO_VERSION=1.8.* }
+  allow_failures:
+    # newer python versions aswell as pypy may also always break our build
+    - python: "3.7-dev"
     - python: "pypy"
-      env: DJANGO_VERSION=2.0b1 DJANGO_REST_VERSION=3.7.*
+    - python: "pypy3"
     - python: "nightly"
-      env: DJANGO_VERSION=1.8 # Django 1.8 might not work with future versions of python
 cache:
   directories:
     - $HOME/.cache/pip
