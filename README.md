@@ -63,10 +63,8 @@ unit tests.
 
 Use this code snippet to run tests:
 ```bash
-pip install -r requirements_test.txt
-python setup.py install
-cd tests
-python manage.py test
+pip install tox
+tox
 ```
 
 ## Cache Backend
