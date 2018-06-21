@@ -5,7 +5,12 @@ token per user.
 
 ## How to use
 
-Django settings file:
+Install:
+```bash
+pip install django-rest-multitokenauth
+```
+
+Add ``'django_rest_multitokenauth'`` to your ``INSTALLED_APPS`` in your Django settings file:
 ```python
 INSTALLED_APPS = (
     ...
@@ -19,7 +24,7 @@ INSTALLED_APPS = (
 
 ```
 
-Django REST Framework Settings:
+Configure Django REST Framework to use ``'django_rest_multitokenauth.coreauthentication.MultiTokenAuthentication'``:
 ```python
 REST_FRAMEWORK = {
     ...
@@ -33,7 +38,7 @@ REST_FRAMEWORK = {
 ```
 
 
-Django url settings:
+And add the auth urls to your Django url settings:
 ```python
 from django.conf.urls import url, include
 
@@ -76,3 +81,21 @@ Then you need to use ``CachedMultiTokenAuthentication`` instead of ``MultiTokenA
 pip install django-memoize
 ```
 
+## Django Compatibility Matrix
+
+If your project uses an older verison of Django or Django Rest Framework, you can choose an older version of this project.
+
+| This Project | Python Version | Django Version | Django Rest Framework |
+|--------------|----------------|----------------|-----------------------|
+| 1.3          | 2.7, 3.4+      | 1.11, 2.0+     | 3.6, 3.7, 3.8         |
+| 1.2.*        | 2.7, 3.4+      | 1.8, 1.11, 2.0+| 3.6, 3.7, 3.8         |
+
+
+## Changelog / Releases
+All releases should be listed in the [releases tab on github](https://github.com/anx-ckreuzberger/django-rest-multiauthtoken/releases).
+
+See [CHANGELOG.md](CHANGELOG.md) for a more detailed listing.
+
+
+## License
+This project is published with the [BSD 3 Clause License](LICENSE). See [https://choosealicense.com/licenses/bsd-3-clause-clear/](https://choosealicense.com/licenses/bsd-3-clause-clear/) for more information about what this means.
