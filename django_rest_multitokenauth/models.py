@@ -19,10 +19,16 @@ class MultiToken(models.Model):
     """
     The multi token model with user agent and IP address.
     """
+
+    id = models.AutoField(
+        primary_key=True
+    )
+
     key = models.CharField(
         _("Key"),
         max_length=64,
-        primary_key=True
+        db_index=True,
+        unique=True
     )
     user = models.ForeignKey(
         AUTH_USER_MODEL,
