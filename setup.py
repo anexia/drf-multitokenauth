@@ -10,11 +10,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-rest-multitokenauth',
-    version='1.3.1',
+    version='1.4.0alpha1',
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',
-    description='An extension of django rest frameworks token auth, providing multiple tokens per user',
+    description='An extension of django rest frameworks token auth, providing multiple authentication tokens per user',
     long_description=README,
     long_description_content_type='text/markdown',
     url='https://github.com/anx-ckreuzberger/django-rest-multiauthtoken',
@@ -27,6 +27,7 @@ setup(
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 2.0',
         'Framework :: Django :: 2.1',
+        'Framework :: Django :: 2.2',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
