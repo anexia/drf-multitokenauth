@@ -17,6 +17,14 @@ from django_rest_multitokenauth.serializers import EmailSerializer
 from django_rest_multitokenauth.signals import pre_auth, post_auth
 
 
+__all__ = [
+    'LogoutAndDeleteAuthToken',
+    'LoginAndObtainAuthToken',
+    'login_and_obtain_auth_token',
+    'logout_and_delete_auth_token',
+]
+
+
 class LogoutAndDeleteAuthToken(APIView):
     """ Custom API View for logging out"""
 

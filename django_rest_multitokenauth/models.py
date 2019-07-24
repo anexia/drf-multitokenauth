@@ -7,6 +7,10 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+__all__ = [
+    'MultiToken',
+]
+
 # Prior to Django 1.5, the AUTH_USER_MODEL setting does not exist.
 # Note that we don't perform this code in the compat module due to
 # bug report #1297
@@ -71,6 +75,6 @@ class MultiToken(models.Model):
         return binascii.hexlify(os.urandom(32)).decode()
 
     def __str__(self):
-        return self.key + " (user " + str(self.user) + " with IP " + self.last_known_ip + \
-               " and user agent " + self.user_agent + ")"
-
+        return "{} (user {} with IP {} and user-agent {})".format(
+            self.key, self.user, self.last_known_ip, self.user_agent
+        )

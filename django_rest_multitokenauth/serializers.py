@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from django.utils.translation import ugettext_lazy as _
+
+__all__ = [
+    'EmailSerializer',
+]
 
 
 class EmailSerializer(serializers.Serializer):
