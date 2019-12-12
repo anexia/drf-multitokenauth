@@ -4,7 +4,6 @@ import os
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 __all__ = [
@@ -18,7 +17,6 @@ __all__ = [
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
-@python_2_unicode_compatible
 class MultiToken(models.Model):
     """
     The multi token model with user agent and IP address.

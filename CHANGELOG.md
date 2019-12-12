@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.4.0 - unreleased
+
+- Added Django 3.0 support
+- Added Django 3.1 support
+- Removed Django 1.11 support
+- Removed Django 2.0 support
+- Removed Python 2.7 support
+- Removed Python 3.4 support
+
+## 1.3.3
+
+- Removes python requires classifier
+
 ## 1.3.2
 
 - Fixes installation for older python versions
