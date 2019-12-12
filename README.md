@@ -1,4 +1,8 @@
 # Django Rest Multi Token Auth
+
+[![PyPI version](https://badge.fury.io/py/django-rest-multitokenauth.svg)](https://badge.fury.io/py/django-rest-multitokenauth)
+[![Build Status](https://travis-ci.org/anexia-it/django-rest-multiauthtoken.svg?branch=master)](https://travis-ci.org/anexia-it/django-rest-multiauthtoken)
+
 This django app is an extension for the Django Rest Framework (Version 3.4+).
 It tries to overcome the limitation of Token Authentication, which only uses a single
 token per user. 
@@ -87,12 +91,15 @@ If your project uses an older verison of Django or Django Rest Framework, you ca
 
 | This Project | Python Version | Django Version | Django Rest Framework |
 |--------------|----------------|----------------|-----------------------|
+| 1.4.*        | 3.5+           | 2.1+, 3.0+     | 3.8, 3.9, 3.10        |
 | 1.3.*        | 2.7, 3.4+      | 1.11, 2.0+     | 3.6, 3.7, 3.8         |
 | 1.2.*        | 2.7, 3.4+      | 1.8, 1.11, 2.0+| 3.6, 3.7, 3.8         |
 
+Make sure to use at least `DRF 3.10` when using `Django 3.0` or newer.
+
 
 ## Changelog / Releases
-All releases should be listed in the [releases tab on github](https://github.com/anx-ckreuzberger/django-rest-multiauthtoken/releases).
+All releases should be listed in the [releases tab on github](https://github.com/anexia-it/django-rest-multiauthtoken/releases).
 
 See [CHANGELOG.md](CHANGELOG.md) for a more detailed listing.
 

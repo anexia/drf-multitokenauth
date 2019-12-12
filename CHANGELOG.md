@@ -1,5 +1,13 @@
 # Changelog
 
+## unreleased
+
+- Added Django 3.0 support
+- Removed Django 1.11 support
+- Removed Django 2.0 support
+- Removed Python 2.7 support
+- Removed Python 3.4 support
+
 ## 1.3
 
 - Removed Django 1.8 support
