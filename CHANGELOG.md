@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.3
+## 1.3.2
+
+- Fixes migrations for Django >=2.1
+
+## 1.3.1
 
 - Removed Django 1.8 support
 
