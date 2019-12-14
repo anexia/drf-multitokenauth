@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.models import update_last_login
 
+from ipware import get_client_ip
 from rest_framework import parsers, renderers, status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
@@ -53,6 +54,7 @@ class LoginAndObtainAuthToken(APIView):
     renderer_classes = (renderers.JSONRenderer,)
     serializer_class = AuthTokenSerializer
 
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -71,7 +73,7 @@ class LoginAndObtainAuthToken(APIView):
             token = MultiToken.objects.create(
                 user=user,
                 user_agent=request.META.get('HTTP_USER_AGENT', ''),
-                last_known_ip=request.META.get('REMOTE_ADDR', '')
+                last_known_ip=get_client_ip(request)[0],
             )
 
             # fire post_auth signal
