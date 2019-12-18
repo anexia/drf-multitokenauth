@@ -12,6 +12,9 @@ setup(
     name='django-rest-multitokenauth',
     version='1.4.0alpha1',
     packages=find_packages(),
+    install_requires=[
+        'django-ipware==2.1.*',
+    ],
     include_package_data=True,
     license='BSD License',
     description='An extension of django rest frameworks token auth, providing multiple authentication tokens per user',
