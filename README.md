@@ -1,4 +1,5 @@
 # Django Rest Multi Token Auth
+
 This django app is an extension for the Django Rest Framework (Version 3.4+).
 It tries to overcome the limitation of Token Authentication, which only uses a single
 token per user. 
@@ -73,6 +74,7 @@ tox
 ```
 
 ## Cache Backend
+
 If you want to use a cache for the session store, you can install [django-memoize](https://pythonhosted.org/django-memoize/) and add `'memoize'` to `INSTALLED_APPS`.
 
 Then you need to use ``CachedMultiTokenAuthentication`` instead of ``MultiTokenAuthentication``.
@@ -92,10 +94,12 @@ If your project uses an older verison of Django or Django Rest Framework, you ca
 
 
 ## Changelog / Releases
-All releases should be listed in the [releases tab on github](https://github.com/anx-ckreuzberger/django-rest-multiauthtoken/releases).
+
+All releases should be listed in the [releases tab on github](https://github.com/anexia-it/django-rest-multitokenauth/releases).
 
 See [CHANGELOG.md](CHANGELOG.md) for a more detailed listing.
 
 
 ## License
+
 This project is published with the [BSD 3 Clause License](LICENSE). See [https://choosealicense.com/licenses/bsd-3-clause-clear/](https://choosealicense.com/licenses/bsd-3-clause-clear/) for more information about what this means.
