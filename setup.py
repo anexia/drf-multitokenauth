@@ -1,17 +1,58 @@
+import io
 import os
+import sys
+from shutil import rmtree
 
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, Command
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
-    README = readme.read()
+VERSION = '1.3.2'
 
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+here = os.path.abspath(os.path.dirname(__file__))
+with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    README = '\n' + f.read()
+
+
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds...')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Building Source and Wheel (universal) distribution...')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+
+        self.status('Uploading the package to PyPI via Twine...')
+        os.system('twine upload dist/*')
+
+        self.status('Pushing git tags...')
+        os.system('git tag {0}'.format(VERSION))
+        os.system('git push --tags')
+
+        sys.exit()
+
 
 setup(
     name='django-rest-multitokenauth',
-    version='1.4.0alpha1',
-    packages=find_packages(),
+    version=VERSION,
+    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     install_requires=[
         'django-ipware==2.1.*',
     ],
@@ -20,9 +61,10 @@ setup(
     description='An extension of django rest frameworks token auth, providing multiple authentication tokens per user',
     long_description=README,
     long_description_content_type='text/markdown',
-    url='https://github.com/anx-ckreuzberger/django-rest-multiauthtoken',
-    author='Christian Kreuzberger',
-    author_email='ckreuzberger@anexia-it.com',
+    url='https://github.com/anexia-it/django-rest-multitokenauth',
+    author='Harald Nezbeda',
+    author_email='hnezbeda@anexia-it.com',
+    python_requires='>=3.4.0',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -45,4 +87,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
+    # $ setup.py upload support.
+    cmdclass={
+        'upload': UploadCommand,
+    },
 )
