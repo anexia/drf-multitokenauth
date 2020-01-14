@@ -2,6 +2,10 @@
 
 ## 1.3.2
 
+- Fixes installation for older python versions
+
+## 1.3.2
+
 - Fixes migrations for Django >=2.1
 
 ## 1.3.1

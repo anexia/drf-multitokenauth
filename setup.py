@@ -5,7 +5,7 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-VERSION = '1.3.2'
+VERSION = '1.3.3'
 
 here = os.path.abspath(os.path.dirname(__file__))
 with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
@@ -64,7 +64,6 @@ setup(
     url='https://github.com/anexia-it/django-rest-multitokenauth',
     author='Harald Nezbeda',
     author_email='hnezbeda@anexia-it.com',
-    python_requires='>=3.4.0',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
