@@ -1,11 +1,10 @@
 # Django Rest Multi Token Auth
 
 [![PyPI](https://img.shields.io/pypi/v/django-rest-multitokenauth)](https://pypi.org/project/django-rest-multitokenauth/)
-[![Build Status](https://travis-ci.org/anexia-it/django-rest-multiauthtoken.svg?branch=master)](https://travis-ci.org/anexia-it/django-rest-multiauthtoken)
+[![Build Status](https://travis-ci.org/anexia-it/django-rest-multitokenauth.svg?branch=master)](https://travis-ci.org/anexia-it/django-rest-multitokenauth)
 
-This django app is an extension for the Django Rest Framework (Version 3.4+).
-It tries to overcome the limitation of Token Authentication, which only uses a single
-token per user. 
+This django app is an extension for the Django Rest Framework.
+It tries to overcome the limitation of Token Authentication, which only uses a single token per user. 
 
 ## How to use
 
@@ -92,7 +91,7 @@ If your project uses an older verison of Django or Django Rest Framework, you ca
 
 | This Project | Python Version | Django Version | Django Rest Framework |
 |--------------|----------------|----------------|-----------------------|
-| 1.4.*        | 3.5+           | 2.1+, 3.0+     | 3.8, 3.9, 3.10        |
+| 1.4.*        | 3.5+           | 2.2+, 3.0+     | 3.9, 3.10, 3.11       |
 | 1.3.*        | 2.7, 3.4+      | 1.11, 2.0+     | 3.6, 3.7, 3.8         |
 | 1.2.*        | 2.7, 3.4+      | 1.8, 1.11, 2.0+| 3.6, 3.7, 3.8         |
 
