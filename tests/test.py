@@ -4,19 +4,8 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django_rest_multitokenauth.models import MultiToken
-try:
-    from unittest.mock import patch
-except:
-    # Python 2.7 fallback
-    from mock import patch
-
-# try getting reverse from django.urls
-try:
-    # Django 1.10 +
-    from django.urls import reverse
-except:
-    # Django 1.8 and 1.9
-    from django.core.urlresolvers import reverse
+from unittest.mock import patch
+from django.urls import reverse
 
 
 class HelperMixin:

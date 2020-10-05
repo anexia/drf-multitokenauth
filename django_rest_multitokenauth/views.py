@@ -54,15 +54,14 @@ class LoginAndObtainAuthToken(APIView):
     renderer_classes = (renderers.JSONRenderer,)
     serializer_class = AuthTokenSerializer
 
-
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         # fire pre_auth signal
         pre_auth.send(
             sender=self.__class__,
-            username=serializer.data['username'],
-            password=serializer.data['password']
+            username=request.data['username'],
+            password=request.data['password']
         )
 
         user = serializer.validated_data['user']
