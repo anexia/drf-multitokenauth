@@ -48,3 +48,11 @@
 ## 0.3.0
 
 - First production ready release
+
+
+[1.4.0 - unreleased]: https://github.com/anexia-it/django-rest-multitokenauth
+[1.3.3]: https://pypi.org/project/django-rest-multitokenauth/1.3.3/
+[1.3.2]: https://pypi.org/project/django-rest-multitokenauth/1.3.2/
+[1.3.1]: https://pypi.org/project/django-rest-multitokenauth/1.3.1/
+[1.2.1]: https://pypi.org/project/django-rest-multitokenauth/1.2.1/
+[1.1.1]: https://pypi.org/project/django-rest-multitokenauth/1.1.1/
