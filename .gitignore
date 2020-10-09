@@ -6,7 +6,6 @@ dist/**
 .idea/
 venv/
 build/
-.tox/
 db.sqlite3
 dist/
 
