@@ -1,7 +1,6 @@
 import binascii
 import os
 
-from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
