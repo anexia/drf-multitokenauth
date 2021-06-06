@@ -2,6 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/django-rest-multitokenauth)](https://pypi.org/project/django-rest-multitokenauth/)
 [![Build Status](https://travis-ci.org/anexia-it/django-rest-multitokenauth.svg?branch=master)](https://travis-ci.org/anexia-it/django-rest-multitokenauth)
+[![Codecov](https://img.shields.io/codecov/c/gh/anexia-it/django-rest-multitokenauth)](https://codecov.io/gh/anexia-it/django-rest-multitokenauth)
 
 This django app is an extension for the Django Rest Framework.
 It tries to overcome the limitation of Token Authentication, which only uses a single token per user. 
