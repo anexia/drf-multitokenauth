@@ -8,34 +8,28 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - "3.5"
           - "3.6"
           - "3.7"
           - "3.8"
+          - "3.9"
+          - "3.10"
           - "pypy3"
         django-version:
           - "2.2"
-          - "3.0"
-          - "3.1"
+          - "3.2"
         drf-version:
           - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
         exclude:
-          - python-version: "3.5"
-            django-version: "3.0"
-          - python-version: "3.5"
-            django-version: "3.1"
           # DRF 3.9 imports python_2_unicode_compatible from django.utils.encoding
           # which has been moved to six.python_2_unicode_compatible()
-          - django-version: "3.0"
-            drf-version: "3.9"
-          - django-version: "3.1"
+          - django-version: "3.2"
             drf-version: "3.9"
           # DRF 3.10 imports FieldDoesNotExist from django.db.models,
           # which has been moved to django.core.exceptions as of Django 3.1
-          - django-version: "3.1"
+          - django-version: "3.2"
             drf-version: "3.10"
           # DRF "3.12" still causes TokenProxy TypeErrors
           - drf-version: "3.12"
