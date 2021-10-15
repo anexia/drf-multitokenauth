@@ -67,13 +67,14 @@ def get_migrations_for_django_21_and_newer():
 def get_migrations_based_on_django_version():
     """
     Returns the proper migrations based on the current Django Version
+
     Unfortunatley, Django 2.1 introduced a breaking change with switching PK from one model to another, see
     https://code.djangoproject.com/ticket/29790
     :return:
     """
     django_version = django.VERSION
 
-    if django_version[0] >= 2 and django_version[1] >= 1:
+    if (django_version[0] >= 2 and django_version[1] >= 1) or django_version[0] >= 3:
         return get_migrations_for_django_21_and_newer()
 
     return get_migrations_for_django_before_21()
