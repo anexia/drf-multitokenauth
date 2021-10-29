@@ -44,12 +44,13 @@ REST_FRAMEWORK = {
 
 And add the auth urls to your Django url settings:
 ```python
-from django.conf.urls import url, include
+from django.conf.urls import include
+from django.urls import re_path
 
 
 urlpatterns = [
     ...
-    url(r'^api/auth/', include('django_rest_multitokenauth.urls', namespace='multi_token_auth')),
+    re_path(r'^api/auth/', include('django_rest_multitokenauth.urls', namespace='multi_token_auth')),
     ...
 ]    
 ```
