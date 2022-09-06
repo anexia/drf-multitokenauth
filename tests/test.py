@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django_rest_multitokenauth.models import MultiToken
@@ -61,6 +62,7 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.setUpUrls()
         self.user1 = User.objects.create_user("user1", "user1@mail.com", "secret1")
         self.user2 = User.objects.create_user("user2", "user2@mail.com", "secret2")
+        self.superuser = User.objects.create_superuser("superuser", "superuser@mail.com", "secret3")
 
     def login_and_obtain_token(self, username, password,  HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
         response = self.rest_do_login(username, password, HTTP_USER_AGENT, REMOTE_ADDR)
@@ -202,6 +204,25 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.assertEqual(MultiToken.objects.filter(key=token2).first().user.username, "user2")
         # check that token3 is assigned to user1
         self.assertEqual(MultiToken.objects.filter(key=token3).first().user.username, "user1")
+
+    def test_login_with_superuser_enabled(self):
+        """ tests login with superuser when the setting is enabled (by default) """
+        # log in one time, just to be sure that the login works
+        self.login_and_obtain_token("superuser", "secret3")
+        # there should be one token
+        self.assertEqual(MultiToken.objects.all().count(), 1)
+
+    @override_settings(AUTH_ENABLE_SUPERUSER_LOGIN=False)
+    def test_login_with_superuser_disabled(self):
+        """ tests login with superuser when the setting is disabled """
+        # logging in should be forbidden for the superuser
+        response = self.rest_do_login("superuser", "secret3")
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse('token' in content, msg="There should not be a token in the response")
+
+        # there should be zero tokens
+        self.assertEqual(MultiToken.objects.all().count(), 0)
 
     def test_logout_with_invalid_token(self):
         """ Tries to log out with an invalid token """

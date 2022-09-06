@@ -1,10 +1,9 @@
 from datetime import timedelta
-from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.contrib.auth.models import User, update_last_login
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.contrib.auth.models import update_last_login
+from django.utils.translation import gettext_lazy as _
 
 from ipware import get_client_ip
 from rest_framework import parsers, renderers, status
@@ -16,7 +15,6 @@ from rest_framework.authentication import get_authorization_header
 from django_rest_multitokenauth.models import MultiToken
 from django_rest_multitokenauth.serializers import EmailSerializer
 from django_rest_multitokenauth.signals import pre_auth, post_auth
-
 
 __all__ = [
     'LogoutAndDeleteAuthToken',
@@ -65,6 +63,10 @@ class LoginAndObtainAuthToken(APIView):
         )
 
         user = serializer.validated_data['user']
+
+        superuser_login_enabled = getattr(settings, 'AUTH_ENABLE_SUPERUSER_LOGIN', True)
+        if not superuser_login_enabled and user.is_superuser:
+            return Response({'error': 'superusers can\'t log in'}, status=status.HTTP_403_FORBIDDEN)
 
         # check that user is authenticated
         if user.is_authenticated:
