@@ -93,9 +93,10 @@ If your project uses an older verison of Django or Django Rest Framework, you ca
 
 | This Project | Python Version | Django Version | Django Rest Framework |
 |--------------|----------------|----------------|-----------------------|
-| 1.4.*        | 3.6+           | 2.2+, 3.2+     | 3.9, 3.10, 3.11, 3.12 |
-| 1.3.*        | 2.7, 3.4+      | 1.11, 2.0+     | 3.6, 3.7, 3.8         |
-| 1.2.*        | 2.7, 3.4+      | 1.8, 1.11, 2.0+| 3.6, 3.7, 3.8         |
+| 1.5.*        | 3.7+           | 3.2, 4.0, 4.1  | 3.12, 3.13            |
+| 1.4.*        | 3.6+           | 2.2, 3.2       | 3.9, 3.10, 3.11, 3.12 |
+| 1.3.*        | 2.7, 3.4+      | 1.11, 2.0      | 3.6, 3.7, 3.8         |
+| 1.2.*        | 2.7, 3.4+      | 1.8, 1.11, 2.0 | 3.6, 3.7, 3.8         |
 
 Make sure to use at least `DRF 3.10` when using `Django 3.0` or newer.
 

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+- Added setting for disabling superuser login
+- Added Django 4.0 support
+- Added Django 4.1 support
+- Removed Django 2.2 support
+- Removed Python 3.6 support
+
 ## [1.4.0]
 
 - Added Django 3.2 support
