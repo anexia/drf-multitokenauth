@@ -1,5 +1,8 @@
 # Changelog
 
+## [Unreleased]
+
+
 ## [2.0.0]
 
 - Rename package namesapce
@@ -58,7 +61,8 @@
 
 - Internal release
 
-[Unreleased]: https://github.com/anexia/drf-multitokenauth/compare/1.5.0...HEAD
+[Unreleased]: https://github.com/anexia/drf-multitokenauth/compare/2.0.0...HEAD
+[2.0.0]: https://pypi.org/project/drf-multitokenauth/2.0.0/
 [1.5.0]: https://pypi.org/project/django-rest-multitokenauth/1.5.0/
 [1.4.0]: https://pypi.org/project/django-rest-multitokenauth/1.4.0/
 [1.3.3]: https://pypi.org/project/django-rest-multitokenauth/1.3.3/
