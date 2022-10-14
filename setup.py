@@ -8,7 +8,7 @@ with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     README = '\n' + f.read()
 
 setup(
-    name='django-rest-multitokenauth',
+    name='drf-multitokenauth',
     version=os.getenv('PACKAGE_VERSION', '0.0.0').replace('refs/tags/', ''),
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     install_requires=[
@@ -19,7 +19,7 @@ setup(
     description='An extension of django rest frameworks token auth, providing multiple authentication tokens per user',
     long_description=README,
     long_description_content_type='text/markdown',
-    url='https://github.com/anexia-it/django-rest-multitokenauth',
+    url='https://github.com/anexia/drf-multitokenauth',
     author='Harald Nezbeda',
     author_email='hnezbeda@anexia-it.com',
     classifiers=[

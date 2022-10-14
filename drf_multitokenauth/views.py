@@ -12,9 +12,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import get_authorization_header
 
-from django_rest_multitokenauth.models import MultiToken
-from django_rest_multitokenauth.serializers import EmailSerializer
-from django_rest_multitokenauth.signals import pre_auth, post_auth
+from drf_multitokenauth.models import MultiToken
+from drf_multitokenauth.serializers import EmailSerializer
+from drf_multitokenauth.signals import pre_auth, post_auth
 
 __all__ = [
     'LogoutAndDeleteAuthToken',

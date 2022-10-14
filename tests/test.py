@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django_rest_multitokenauth.models import MultiToken
+from drf_multitokenauth.models import MultiToken
 from unittest.mock import patch
 from django.urls import reverse
 
@@ -244,8 +244,8 @@ class AuthTestCase(APITestCase, HelperMixin):
         response = self.rest_do_logout(None)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @patch('django_rest_multitokenauth.signals.pre_auth.send')
-    @patch('django_rest_multitokenauth.signals.post_auth.send')
+    @patch('drf_multitokenauth.signals.pre_auth.send')
+    @patch('drf_multitokenauth.signals.post_auth.send')
     def test_signals(self, mock_pre_auth, mock_post_auth):
         """ checks whether the signal handlers are called or not"""
         # verify that signal handlers have not yet been called
