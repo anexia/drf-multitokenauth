@@ -1,11 +1,9 @@
 """
 Provides our custom MultiToken Authentication (based on normal Token Authentication)
 """
-from __future__ import unicode_literals
-
 from rest_framework.authentication import TokenAuthentication
 
-from django_rest_multitokenauth.models import MultiToken
+from drf_multitokenauth.models import MultiToken
 
 # try to import memoize
 memoize = None

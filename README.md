@@ -1,8 +1,8 @@
 # Django Rest Multi Token Auth
 
-[![PyPI](https://img.shields.io/pypi/v/django-rest-multitokenauth)](https://pypi.org/project/django-rest-multitokenauth/)
-[![Build Status](https://travis-ci.org/anexia-it/django-rest-multitokenauth.svg?branch=master)](https://travis-ci.org/anexia-it/django-rest-multitokenauth)
-[![Codecov](https://img.shields.io/codecov/c/gh/anexia-it/django-rest-multitokenauth)](https://codecov.io/gh/anexia-it/django-rest-multitokenauth)
+[![PyPI](https://img.shields.io/pypi/v/drf-multitokenauth)](https://pypi.org/project/drf-multitokenauth/)
+[![Test status](https://github.com/anexia-it/drf-multitokenauth/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/anexia-it/drf-multitokenauth/actions/workflows/test.yml)
+[![Codecov](https://img.shields.io/codecov/c/gh/anexia/drf-multitokenauth)](https://codecov.io/gh/anexia/drf-multitokenauth)
 
 This django app is an extension for the Django Rest Framework.
 It tries to overcome the limitation of Token Authentication, which only uses a single token per user. 
@@ -11,10 +11,10 @@ It tries to overcome the limitation of Token Authentication, which only uses a s
 
 Install:
 ```bash
-pip install django-rest-multitokenauth
+pip install drf-multitokenauth
 ```
 
-Add ``'django_rest_multitokenauth'`` to your ``INSTALLED_APPS`` in your Django settings file:
+Add ``'drf_multitokenauth'`` to your ``INSTALLED_APPS`` in your Django settings file:
 ```python
 INSTALLED_APPS = (
     ...
@@ -22,19 +22,19 @@ INSTALLED_APPS = (
     ...
     'rest_framework',
     ...
-    'django_rest_multitokenauth',
+    'drf_multitokenauth',
     ...
 )
 
 ```
 
-Configure Django REST Framework to use ``'django_rest_multitokenauth.coreauthentication.MultiTokenAuthentication'``:
+Configure Django REST Framework to use ``'drf_multitokenauth.coreauthentication.MultiTokenAuthentication'``:
 ```python
 REST_FRAMEWORK = {
     ...
     'DEFAULT_AUTHENTICATION_CLASSES': [
         ...
-        'django_rest_multitokenauth.coreauthentication.MultiTokenAuthentication',
+        'drf_multitokenauth.coreauthentication.MultiTokenAuthentication',
         ...
     ],
     ...
@@ -50,7 +50,7 @@ from django.urls import re_path
 
 urlpatterns = [
     ...
-    re_path(r'^api/auth/', include('django_rest_multitokenauth.urls', namespace='multi_token_auth')),
+    re_path(r'^api/auth/', include('drf_multitokenauth.urls', namespace='multi_token_auth')),
     ...
 ]    
 ```
@@ -93,6 +93,7 @@ If your project uses an older verison of Django or Django Rest Framework, you ca
 
 | This Project | Python Version | Django Version | Django Rest Framework |
 |--------------|----------------|----------------|-----------------------|
+| 2.0.*        | 3.7+           | 3.2, 4.0, 4.1  | 3.12, 3.13            |
 | 1.5.*        | 3.7+           | 3.2, 4.0, 4.1  | 3.12, 3.13            |
 | 1.4.*        | 3.6+           | 2.2, 3.2       | 3.9, 3.10, 3.11, 3.12 |
 | 1.3.*        | 2.7, 3.4+      | 1.11, 2.0      | 3.6, 3.7, 3.8         |
@@ -100,10 +101,23 @@ If your project uses an older verison of Django or Django Rest Framework, you ca
 
 Make sure to use at least `DRF 3.10` when using `Django 3.0` or newer.
 
+Releases prior to `2.0.0` where published as [django-rest-multitokenauth](https://pypi.org/project/django-rest-multitokenauth/).
+Newer releases are published as [drf-multitokenauth](https://pypi.org/project/drf-multitokenauth/).
+
+## Migrating from 1.x to 2.x
+
+1. Uninstall `django-rest-multitokenauth`
+2. Install `drf-multitokenauth`
+3. Run the migration SQL bellow:
+    ```
+    ALTER TABLE django_rest_multitokenauth_multitoken RENAME to drf_multitokenauth_multitoken;
+    UPDATE django_migrations SET app = 'drf_multitokenauth' WHERE app = 'django_rest_multitokenauth';
+    ```
+4. Run Django migrations
 
 ## Changelog / Releases
 
-All releases should be listed in the [releases tab on github](https://github.com/anexia-it/django-rest-multitokenauth/releases).
+All releases should be listed in the [releases tab on github](https://github.com/anexia/drf-multitokenauth/releases).
 
 See [CHANGELOG.md](CHANGELOG.md) for a more detailed listing.
 

@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased]
+## [2.0.0]
+
+- Rename package namesapce
+- `2.0.0` migration guide
+
+## [1.5.0]
 
 - Added setting for disabling superuser login
 - Added Django 4.0 support
@@ -53,7 +58,8 @@
 
 - Internal release
 
-[Unreleased]: https://github.com/anexia-it/django-rest-multitokenauth/compare/1.4.0...HEAD
+[Unreleased]: https://github.com/anexia/drf-multitokenauth/compare/1.5.0...HEAD
+[1.5.0]: https://pypi.org/project/django-rest-multitokenauth/1.5.0/
 [1.4.0]: https://pypi.org/project/django-rest-multitokenauth/1.4.0/
 [1.3.3]: https://pypi.org/project/django-rest-multitokenauth/1.3.3/
 [1.3.2]: https://pypi.org/project/django-rest-multitokenauth/1.3.2/

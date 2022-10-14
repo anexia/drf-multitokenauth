@@ -1,10 +1,10 @@
 """ URL Configuration for core auth
 """
 from django.conf.urls import include
-from django_rest_multitokenauth.views import login_and_obtain_auth_token, logout_and_delete_auth_token
+from drf_multitokenauth.views import login_and_obtain_auth_token, logout_and_delete_auth_token
 from django.urls import re_path
 
-app_name = 'django_rest_multitokenauth'
+app_name = 'drf_multitokenauth'
 
 urlpatterns = [
     re_path(r'^login', login_and_obtain_auth_token, name="auth-login"),  # normal login with session

@@ -72,10 +72,10 @@ jobs:
         ln -s ./tests/settings.py settings.py
         ln -s ./tests/urls.py urls.py
         # run tests with coverage
-        coverage run --source='./django_rest_multitokenauth' manage.py test
+        coverage run --source='./drf_multitokenauth' manage.py test
         coverage xml
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
 
     - name: Run tests
       run: cd tests && python manage.py test

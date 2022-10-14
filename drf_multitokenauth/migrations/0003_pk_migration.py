@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
 
 def populate_auto_incrementing_pk_field(apps, schema_editor):
-    MultiToken = apps.get_model('django_rest_multitokenauth', 'MultiToken')
+    MultiToken = apps.get_model('drf_multitokenauth', 'MultiToken')
 
     # Generate values for the new id column
     for i, o in enumerate(MultiToken.objects.all()):
@@ -83,7 +80,7 @@ def get_migrations_based_on_django_version():
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('django_rest_multitokenauth', '0002_rename_ip_address_20160426',),
+        ('drf_multitokenauth', '0002_rename_ip_address_20160426',),
     ]
 
     operations = get_migrations_based_on_django_version()

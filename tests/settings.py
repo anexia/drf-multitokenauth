@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # include multi token auth
-    'django_rest_multitokenauth'
+    'drf_multitokenauth'
 ]
 
 MIDDLEWARE = [
@@ -127,6 +127,6 @@ STATIC_URL = '/static/'
 # REST Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'django_rest_multitokenauth.coreauthentication.MultiTokenAuthentication'
+        'drf_multitokenauth.coreauthentication.MultiTokenAuthentication'
     ]
 }
