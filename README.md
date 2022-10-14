@@ -1,7 +1,7 @@
 # Django Rest Multi Token Auth
 
 [![PyPI](https://img.shields.io/pypi/v/drf-multitokenauth)](https://pypi.org/project/drf-multitokenauth/)
-[![Test status](https://github.com/anexia-it/drf-multitokenauth/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/anexia-it/drf-multitokenauth/actions/workflows/test.yml)
+[![Test status](https://github.com/anexia/drf-multitokenauth/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/anexia/drf-multitokenauth/actions/workflows/test.yml)
 [![Codecov](https://img.shields.io/codecov/c/gh/anexia/drf-multitokenauth)](https://codecov.io/gh/anexia/drf-multitokenauth)
 
 This django app is an extension for the Django Rest Framework.
