@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added optional "name" field for MultiToken model
+- Updated README test instructions
 
 ## [2.0.0]
 

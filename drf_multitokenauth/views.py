@@ -1,19 +1,13 @@
-from datetime import timedelta
 from django.conf import settings
-from django.contrib.auth.models import User, update_last_login
-from django.core.exceptions import ValidationError
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
-
+from django.contrib.auth.models import update_last_login
 from ipware import get_client_ip
 from rest_framework import parsers, renderers, status
-from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authentication import get_authorization_header
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authentication import get_authorization_header
 
 from drf_multitokenauth.models import MultiToken
-from drf_multitokenauth.serializers import EmailSerializer
+from drf_multitokenauth.serializers import MultiAuthTokenSerializer
 from drf_multitokenauth.signals import pre_auth, post_auth
 
 __all__ = [
@@ -50,19 +44,22 @@ class LoginAndObtainAuthToken(APIView):
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
     renderer_classes = (renderers.JSONRenderer,)
-    serializer_class = AuthTokenSerializer
+    serializer_class = MultiAuthTokenSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data['user']
+        token_name = serializer.validated_data['token_name']
+
         # fire pre_auth signal
         pre_auth.send(
             sender=self.__class__,
             username=request.data['username'],
-            password=request.data['password']
+            password=request.data['password'],
+            token_name=token_name
         )
-
-        user = serializer.validated_data['user']
 
         superuser_login_enabled = getattr(settings, 'AUTH_ENABLE_SUPERUSER_LOGIN', True)
         if not superuser_login_enabled and user.is_superuser:
@@ -75,6 +72,7 @@ class LoginAndObtainAuthToken(APIView):
                 user=user,
                 user_agent=request.META.get('HTTP_USER_AGENT', ''),
                 last_known_ip=get_client_ip(request)[0],
+                name=token_name,
             )
 
             # fire post_auth signal
