@@ -1,12 +1,14 @@
 import json
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.test import override_settings
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+
 from drf_multitokenauth.models import MultiToken
-from unittest.mock import patch
-from django.urls import reverse
 
 
 class HelperMixin:
@@ -26,12 +28,16 @@ class HelperMixin:
         """ reset all client credentials """
         self.client.credentials()
 
-    def rest_do_login(self, username, password, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
+    def rest_do_login(self, username, password, token_name=None, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
         """ REST API Wrapper for login """
         data = {
             'username': username,
             'password': password
         }
+
+        if token_name is not None:
+            data['token_name'] = token_name
+
         return self.client.post(
             self.login_url,
             data,
@@ -64,8 +70,8 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.user2 = User.objects.create_user("user2", "user2@mail.com", "secret2")
         self.superuser = User.objects.create_superuser("superuser", "superuser@mail.com", "secret3")
 
-    def login_and_obtain_token(self, username, password,  HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
-        response = self.rest_do_login(username, password, HTTP_USER_AGENT, REMOTE_ADDR)
+    def login_and_obtain_token(self, username, password, token_name=None, HTTP_USER_AGENT='', REMOTE_ADDR='127.0.0.1'):
+        response = self.rest_do_login(username, password, token_name, HTTP_USER_AGENT, REMOTE_ADDR)
         self.assertContains(response, "{\"token\":\"")
 
         content = json.loads(response.content.decode())
@@ -142,6 +148,87 @@ class AuthTestCase(APITestCase, HelperMixin):
             MultiToken.objects.filter(Q(key=token1) | Q(key=token3)).count(),
             2
         )
+
+    def test_login_with_token_name(self):
+        """ tests login several times, using the same or different token_names for one or more users """
+        # there should be zero tokens
+        self.assertEqual(MultiToken.objects.all().count(), 0)
+
+        # login first time without token_name (defaults to '')
+        token1 = self.login_and_obtain_token('user1', 'secret1')
+        self.assertEqual(MultiToken.objects.all().count(), 1)
+        # verify the token is for user 1 and has an empty token_name
+        multi_token1 = MultiToken.objects.filter(key=token1).first()
+        self.assertEqual(
+            multi_token1.user.username,
+            'user1'
+        )
+        self.assertEqual(multi_token1.name, '')
+
+        # login second time with empty token_name ''
+        token2 = self.login_and_obtain_token('user1', 'secret1', '')
+        self.assertEqual(MultiToken.objects.all().count(), 2)
+        # verify the token is for user 1 and has an empty token_name
+        multi_token2 = MultiToken.objects.filter(key=token2).first()
+        self.assertEqual(
+            multi_token2.user.username,
+            'user1'
+        )
+        self.assertEqual(multi_token2.name, '')
+        # verify that token1 is not equal to token2
+        self.assertNotEqual(token1, token2)
+
+        # login third time, with token_name
+        token3 = self.login_and_obtain_token('user1', 'secret1', 'test_token_name1')
+        self.assertEqual(MultiToken.objects.all().count(), 3)
+        # verify the token is for user 1 and has an empty token_name
+        multi_token3 = MultiToken.objects.filter(key=token3).first()
+        self.assertEqual(
+            multi_token3.user.username,
+            'user1'
+        )
+        self.assertEqual(multi_token3.name, 'test_token_name1')
+        # verify that token2 is not equal to token3
+        self.assertNotEqual(token2, token3)
+
+        # login third time, with same token_name
+        token4 = self.login_and_obtain_token('user1', 'secret1', 'test_token_name1')
+        self.assertEqual(MultiToken.objects.all().count(), 4)
+        # verify the token is for user 1 and has an empty token_name
+        multi_token4 = MultiToken.objects.filter(key=token4).first()
+        self.assertEqual(
+            multi_token4.user.username,
+            'user1'
+        )
+        self.assertEqual(multi_token4.name, 'test_token_name1')
+        # verify that token3 is not equal to token4
+        self.assertNotEqual(token3, token4)
+
+        # login with another user and the same token_name
+        token5 = self.login_and_obtain_token('user2', 'secret2', 'test_token_name1')
+        self.assertEqual(MultiToken.objects.all().count(), 5)
+        # verify the token is for user 1 and has an empty token_name
+        multi_token5 = MultiToken.objects.filter(key=token5).first()
+        self.assertEqual(
+            multi_token5.user.username,
+            'user2'
+        )
+        self.assertEqual(multi_token5.name, 'test_token_name1')
+        # verify that token4 is not equal to token5
+        self.assertNotEqual(token4, token5)
+
+        # login with same user and different token_name
+        token6 = self.login_and_obtain_token('user2', 'secret2', 'test_token_name2')
+        self.assertEqual(MultiToken.objects.all().count(), 6)
+        # verify the token is for user 1 and has an empty token_name
+        multi_token6 = MultiToken.objects.filter(key=token6).first()
+        self.assertEqual(
+            multi_token6.user.username,
+            'user2'
+        )
+        self.assertEqual(multi_token6.name, 'test_token_name2')
+        # verify that token5 is not equal to token6
+        self.assertNotEqual(token5, token6)
 
     def test_login_with_invalid_credentials(self):
         """ tests login with invalid credentials """

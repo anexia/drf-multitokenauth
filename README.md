@@ -58,7 +58,7 @@ urlpatterns = [
 
 The following endpoints are provided:
 
- * `login` - takes username and password; on success an auth token is returned
+ * `login` - takes username, password and an optional token_name; on success an auth token is returned
  * `logout`
 
 ## Signals
@@ -71,10 +71,20 @@ The following endpoints are provided:
 See folder [tests/](tests/). Basically, all endpoints are covered with multiple
 unit tests.
 
-Use this code snippet to run tests:
+Follow below instructions to run the tests.
+You may exchange the installed Django and DRF versions according to your requirements. 
+:warning: Depending on your local environment settings you might need to explicitly call `python3` instead of `python`.
 ```bash
-pip install tox
-tox
+# install dependencies
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# setup environment
+pip install -e .
+python setup.py install
+
+# run tests
+cd tests && python manage.py test
 ```
 
 ## Cache Backend

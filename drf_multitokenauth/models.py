@@ -50,6 +50,11 @@ class MultiToken(models.Model):
         verbose_name=_("HTTP User Agent"),
         default=""
     )
+    name = models.CharField(
+        max_length=256,
+        verbose_name=_("Token name"),
+        default=""
+    )
 
     class Meta:
         # Work around for a bug in Django:
@@ -72,6 +77,6 @@ class MultiToken(models.Model):
         return binascii.hexlify(os.urandom(32)).decode()
 
     def __str__(self):
-        return "{} (user {} with IP {} and user-agent {})".format(
-            self.key, self.user, self.last_known_ip, self.user_agent
+        return "{} ({} for user {} with IP {} and user-agent {})".format(
+            self.key, self.name, self.user, self.last_known_ip, self.user_agent
         )
