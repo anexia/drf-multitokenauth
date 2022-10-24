@@ -122,6 +122,7 @@ Newer releases are published as [drf-multitokenauth](https://pypi.org/project/dr
     ```
     ALTER TABLE django_rest_multitokenauth_multitoken RENAME to drf_multitokenauth_multitoken;
     UPDATE django_migrations SET app = 'drf_multitokenauth' WHERE app = 'django_rest_multitokenauth';
+    UPDATE django_content_type SET app_label = 'drf_multitokenauth' WHERE app_label = 'django_rest_multitokenauth';
     ```
 4. Run Django migrations
 
