@@ -103,6 +103,7 @@ If your project uses an older verison of Django or Django Rest Framework, you ca
 
 | This Project | Python Version | Django Version | Django Rest Framework |
 |--------------|----------------|----------------|-----------------------|
+| 2.1.*        | 3.9+           | 4.2, 5.0, 5.1  | 3.15                  |
 | 2.0.*        | 3.7+           | 3.2, 4.0, 4.1  | 3.12, 3.13            |
 | 1.5.*        | 3.7+           | 3.2, 4.0, 4.1  | 3.12, 3.13            |
 | 1.4.*        | 3.6+           | 2.2, 3.2       | 3.9, 3.10, 3.11, 3.12 |
