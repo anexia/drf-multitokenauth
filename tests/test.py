@@ -352,6 +352,6 @@ class AuthTestCase(APITestCase, HelperMixin):
         self.assertTrue(mock_pre_auth.called)
         self.assertTrue(mock_post_auth.called)
 
-        self.assertEquals(mock_pre_auth.call_count, 1)
-        self.assertEquals(mock_post_auth.call_count, 1)
+        self.assertEqual(mock_pre_auth.call_count, 1)
+        self.assertEqual(mock_post_auth.call_count, 1)
 

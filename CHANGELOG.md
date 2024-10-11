@@ -2,8 +2,25 @@
 
 ## [Unreleased]
 
+
+## [2.1.0]
+
 - Added optional "name" field for MultiToken model
 - Updated README test instructions
+- Added Python 3.11 support
+- Added Python 3.12 support
+- Added Python 3.13 support
+- Added Django 4.2 support
+- Added Django 5.0 support
+- Added Django 5.1 support
+- Added Django Rest Framework 3.15 support
+- Removed Python 3.7 support
+- Removed Python 3.8 support
+- Removed Django 3.2 support
+- Removed Django 4.0 support
+- Removed Django 4.1 support
+- Removed Django Rest Framework 3.12 support
+- Removed Django Rest Framework 3.13 support
 
 ## [2.0.0]
 
@@ -63,7 +80,8 @@
 
 - Internal release
 
-[Unreleased]: https://github.com/anexia/drf-multitokenauth/compare/2.0.0...HEAD
+[Unreleased]: https://github.com/anexia/drf-multitokenauth/compare/2.1.0...HEAD
+[2.1.0]: https://pypi.org/project/drf-multitokenauth/2.1.0/
 [2.0.0]: https://pypi.org/project/drf-multitokenauth/2.0.0/
 [1.5.0]: https://pypi.org/project/django-rest-multitokenauth/1.5.0/
 [1.4.0]: https://pypi.org/project/django-rest-multitokenauth/1.4.0/
